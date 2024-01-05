@@ -9,20 +9,12 @@
 DELIMITER $$
 CREATE PROCEDURE AddBonus (IN user_id INT, INTEGER project_name VARCHAR(40), IN score INTEGER)
 BEGIN
-   DECLARE pname VARCHAR(40);
-   DECLARE proj_id INTEGER;
+   INSERT INTO projects(name)
+   SELECT project_name WHERE project_name NOT IN (
+      SELECT name FROM projects
+   );
 
-   -- collect the project name and store in the pname variable
-   SELECT name INTO pname FROM projects WHERE name = project_name;
-
-   -- some conditionals to determine the next line of action
-   IF pname = NULL THEN
-      INSERT INTO projects(name) VALUES(project_name);
-      UPDATE correction SET score = score WHERE user_id = user_id
-      AND project_id = SELECT id FROM projects WHERE name = project_name;
-   ELSEIF project_name = pname THEN
-      SELECT id INTO proj_id FROM projects WHERE name = project_name;
-      INSERT INTO correction(user_id, project_id, score) VALUES(user_id, proj_id, score);
-   END IF;
+   INSERT INTO corrections(user_id, project_id, score)
+   VALUES(user_id, (SELECT id FROM projects WHERE name=project_name), score);
 END $$
-DELIMITER ;
+DELIMITER ;$$
