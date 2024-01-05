@@ -7,10 +7,10 @@
 --    score, the score value for the correction
 
 DELIMITER $$
-CREATE PROCEDURE AddBonus (IN user_id INT, IN project_name VARCHAR(40), IN score INT)
+CREATE PROCEDURE AddBonus (IN user_id INT, INTEGER project_name VARCHAR(40), IN score INTEGER)
 BEGIN
    DECLARE pname VARCHAR(40);
-   DECLARE proj_id INT;
+   DECLARE proj_id INTEGER;
 
    -- collect the project name and store in the pname variable
    SELECT name INTO pname FROM projects WHERE name = project_name;
